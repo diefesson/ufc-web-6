@@ -61,7 +61,6 @@ export default {
       this.sellDate = todayUTC();
     },
     edit(car) {
-      console.log(car)
       this.editing = true;
       this.id = car.id;
       this.name = car.name;
@@ -85,7 +84,7 @@ export default {
       if (this.editing) {
         this.$emit("update-car", {
           id: this.id,
-          car: this.car,
+          car: car,
         });
       } else {
         this.$emit("add-car", car);

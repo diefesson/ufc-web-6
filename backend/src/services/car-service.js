@@ -1,3 +1,10 @@
+function brandFilter(brand){
+    brand = brand.toLowerCase()
+    return function(car){
+        return car.brand.toLowerCase().search(brand) >= 0
+    }
+}
+
 class CarService {
 
     constructor() {
@@ -26,8 +33,15 @@ class CarService {
         return this.cars.find((car) => car.id == id)
     }
 
-    findAll() {
-        return this.cars
+    findAll(limit, brand) {
+        var cars = this.cars
+        if (brand != null) {
+            cars = cars.filter(brandFilter(brand))
+        }
+        if(limit != null){
+            cars = cars.slice(0, limit) 
+        }
+        return cars
     }
 
     remove(id) {

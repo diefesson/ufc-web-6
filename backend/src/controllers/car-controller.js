@@ -24,7 +24,9 @@ exports.put = (req, res) => {
 }
 
 exports.get = (req, res) => {
-    res.json(carService.findAll())
+    var limit = req.query.limit
+    var brand = req.query.brand
+    res.json(carService.findAll(limit, brand))
 }
 
 exports.getById = (req, res) => {
