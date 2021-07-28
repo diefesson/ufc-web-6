@@ -23,7 +23,6 @@ class CarService {
     }
 
     find(id) {
-        console.log(this.cars.find)
         return this.cars.find((car) => car.id == id)
     }
 
