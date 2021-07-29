@@ -10,8 +10,13 @@ async function update(id, car) {
     return (await (axios.put(URL + "/" + id, car))).data
 }
 
-async function getAll() {
-    return (await (axios.get(URL))).data
+async function getAll(limit, brand) {
+    var config = {
+        params:{
+            limit, brand
+        }
+    }
+    return (await (axios.get(URL, config))).data
 }
 
 async function get(id) {

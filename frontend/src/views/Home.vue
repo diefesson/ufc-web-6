@@ -8,6 +8,12 @@
         v-on:update-car="updateCarHandler"
       />
       <div class="title">Cars</div>
+      <div class="list-options">
+        <label>Limit:</label>
+        <input type="number" min="1" v-model="limit" />
+        <label>Brand:</label>
+        <input v-model="brand" />
+      </div>
       <car-list
         v-bind:cars="cars"
         v-on:edit-car="editCarHandler"
@@ -30,6 +36,8 @@ export default {
   },
   data: () => {
     return {
+      limit: 5,
+      brand: "",
       cars: [],
     };
   },
@@ -42,17 +50,24 @@ export default {
       await carService.update(e.id, e.car);
       this.refreshCars();
     },
-    async editCarHandler(car){
-      this.$refs.carForm.edit(car)
+    async editCarHandler(car) {
+      this.$refs.carForm.edit(car);
     },
     async removeCarHanlder(id) {
       await carService.remove(id);
       this.refreshCars();
     },
     async refreshCars() {
-      this.cars = await carService.getAll();
+      this.cars = await carService.getAll(this.limit, this.brand);
     },
-    
+  },
+  watch: {
+    limit() {
+      this.refreshCars();
+    },
+    brand() {
+      this.refreshCars();
+    },
   },
   mounted() {
     this.refreshCars();
@@ -81,5 +96,11 @@ export default {
   font-size: 24px;
   font-weight: 700;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.list-options{
+  display: grid;
+  grid-auto-flow: column;
+  gap: 3px;
 }
 </style>

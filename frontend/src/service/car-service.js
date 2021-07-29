@@ -12,8 +12,8 @@ async function get(id){
     return await carRepository.get(id)
 }
 
-async function getAll(car){
-    return await carRepository.getAll(car)
+async function getAll(limit, brand){
+    return await carRepository.getAll(limit, brand)
 }
 
 async function remove(id){

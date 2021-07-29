@@ -2,7 +2,7 @@
   <div class="car-form">
     <div class="entries">
       <label>ID:</label>
-      <input v-model="id" readonly class="id-input" />
+      <input v-model="id" readonly />
       <label>Name:</label>
       <input v-model="name" />
       <label>Brand:</label>
@@ -121,12 +121,12 @@ export default {
   padding-right: 10px;
 }
 
-.entries label {
+label {
   text-align: right;
   white-space: pre;
 }
 
-.entries .id-input label {
-  background-color: #a0a0a0;
+input:read-only {
+  background-color: #E5E5E5;
 }
 </style>
