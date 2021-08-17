@@ -4,12 +4,12 @@ const Employee = require("../models/employee")
 const pool = require("./pool")
 
 function rowToEmployee(row) {
-    return Employee(
-        id = row.id,
-        name = row.name,
-        role = row.role,
-        birthday = row.birthday,
-        adimissionDay = row.adimission_day
+    return new Employee(
+        row.id,
+        row.name,
+        row.role,
+        row.birthday,
+        row.admission_day
     )
 }
 
@@ -17,22 +17,22 @@ exports.findAll = async function (limit, role) {
     sql = "select * from employees ";
     params = [];
     if (role != null) {
-        sql += "where role=%L";
-        params += role;
+        sql += "where lower(role) like lower(concat('%', %L, '%')) ";
+        params.push(role);
     }
     if (limit != null) {
         sql += "limit %L"
-        params += limit
+        params.push(limit)
     }
     sql = format(sql, ...params);
-    rows = await pool.query(sql);
+    rows = (await pool.query(sql)).rows;
     return rows.map(rowToEmployee);
 }
 
 exports.find = async function (employeeId) {
     sql = format("select * from employees where id=%L", employeeId);
-    row = (await pool.query(sql))[0];
-    return row ? rowToEmployee(row) : null;
+    rows = (await pool.query(sql)).rows;
+    return rows.map(rowToEmployee)[0]
 }
 
 exports.add = async function (employee) {
@@ -41,10 +41,10 @@ exports.add = async function (employee) {
         employee.name,
         employee.role,
         employee.birthday,
-        employee.adimissionDay
+        employee.admissionDay
     );
-    row = (await pool.query(sql))[0];
-    return rowToEmployee(row);
+    rows = (await pool.query(sql)).rows;
+    return rows.map(rowToEmployee)[0]
 }
 
 exports.update = async function (id, employee) {
@@ -53,15 +53,15 @@ exports.update = async function (id, employee) {
         employee.name,
         employee.role,
         employee.birthday,
-        employee.adimissionDay,
+        employee.admissionDay,
         id
     );
-    row = (await pool.query(sql))[0];
-    return row ? rowToEmployee(row) : null;
+    rows = (await pool.query(sql)).rows;
+    return rows.map(rowToEmployee)[0];
 }
 
 exports.remove = async function (id) {
-    sql = format("delete from employees where id=%L", id);
-    row = (await pool.query(sql))[0];
-    return row ? rowToEmployee(row) : null;
+    sql = format("delete from employees where id=%L returning *", id);
+    rows = (await pool.query(sql)).rows;
+    return rows.map(rowToEmployee)[0];
 }

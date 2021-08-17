@@ -29,7 +29,7 @@ exports.getById = async function (res, id) {
 
 exports.delete = async function (res, id) {
     employee = await employeeRepository.remove(id)
-    if (employee = null) {
+    if (employee == null) {
         notFound(res)
     } else {
         successResponse(res, employee)

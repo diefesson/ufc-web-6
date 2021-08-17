@@ -1,88 +1,63 @@
 const employeeController = require("../controllers/employee-controller");
-const {badRequest} = require("../util/response-util")
+const { badRequest } = require("../util/response-util")
+const { parseId, parseLimit } = require("../util/validation-util")
 const Employee = require("../models/employee");
 
-const defaultLimit = 10;
-
-function validLimit(limit) {
-    if (limit == null) {
-        return defaultLimit;
-    }
-    limit = Number(limit)
-    if (isNaN(limit)) {
-        return null;
-    }
-    limit = Math.min(limit, 20);
-    limit = Math.max(limit, 1);
-}
-
-function validId(id) {
-    if (id == null) {
-        return null;
-    }
-    id = Number(id)
-    if (isNaN(id)) {
-        return null;
-    }
-    if (id < 0) {
-        return null;
-    }
-    return id;
-}
-
 exports.get = async function (req, res) {
-    let limit = validLimit(req.query.limit)
-    let role = req.query.role
-    if(limit == null){
-        badRequest(res)
+    let limit = parseLimit(req.query.limit);
+    let role = req.query.role;
+    if (limit != null) {
+        employeeController.get(res, limit, role);
+    } else {
+        badRequest(res);
     }
-    employeeController.get(res, limit, role)
 }
 
 exports.getById = async function (req, res) {
-    let id = validId(req.query.id)
-    if(id == null){
-        badRequest(res)
+    let id = parseId(req.params.id)
+    if (id != null) {
+        employeeController.getById(res, id);
+    } else {
+        badRequest(res);
     }
-    employeeController.getById(res, id)
 }
 
 exports.post = async function (req, res) {
-    employee = Employee(
-        req.query.id,
-        req.query.name,
-        req.query.role,
-        req.query.birthday,
-        req.query.admimissionDay,
+    let employee = new Employee(
+        null,
+        req.body.name,
+        req.body.role,
+        req.body.birthday,
+        req.body.admissionDay,
     )
-    if(employee.isValid()){
-        employeeController.post(res, employee)
+    if (employee.isValid()) {
+        employeeController.post(res, employee);
     } else {
-        badRequest(res)
+        badRequest(res);
     }
 }
 
 exports.put = async function (req, res) {
-    id = validId(req.query.id)
-    employee = Employee(
-        req.query.id,
-        req.query.name,
-        req.query.role,
-        req.query.birthday,
-        req.query.admimissionDay,
+    let id = parseId(req.params.id)
+    let employee = new Employee(
+        null,
+        req.body.name,
+        req.body.role,
+        req.body.birthday,
+        req.body.admissionDay,
     )
-    if(id != null && employee.isValid()){
-        employeeController.put(res, employee)
+    if (id != null && employee.isValid()) {
+        employeeController.put(res, id, employee);
     } else {
-        badRequest(res)
+        badRequest(res);
     }
 }
 
 exports.delete = async function (req, res) {
-    id = validId(req.query.id)
-    if(id != null){
-        employeeController.delete(res, id)
+    let id = parseId(req.params.id)
+    if (id != null) {
+        employeeController.delete(res, id);
     } else {
-        badRequest(res)
+        badRequest(res);
     }
 }

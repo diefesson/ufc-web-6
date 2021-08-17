@@ -1,3 +1,5 @@
+const { parseId, isValidDate, isValidText } = require("../util/validation-util");
+
 class Employee {
 
     constructor(id, name, role, birthday, admissionDay) {
@@ -6,6 +8,18 @@ class Employee {
         this.role = role;
         this.birthday = birthday;
         this.admissionDay = admissionDay;
+    }
+
+    isValid() {
+        if (this.id != null && parseId(this.id) == null) {
+            return false
+        }
+        return (
+            isValidText(this.name) &&
+            isValidText(this.role) &&
+            isValidDate(this.birthday) &&
+            isValidDate(this.admissionDay)
+        )
     }
 
 }
