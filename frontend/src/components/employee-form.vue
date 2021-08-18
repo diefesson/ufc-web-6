@@ -65,18 +65,20 @@ export default {
       this.admissionDay = employee.admissionDay;
     },
     save() {
-      let textRegex = "[A-z]{3,}";
-      if (!this.name.match(textRegex)) {
+      let textRegex = "^[A-z][A-z ]+[A-z]$";
+      let name = this.name.trim()
+      let role  = this.role.trim()
+      if (!name.match(textRegex)) {
         alert("Name should be composed of at least 3 alphabetic chars");
         return;
       }
-      if (!this.role.match(textRegex)) {
+      if (!role.match(textRegex)) {
         alert("Role should be composed of at least 3 alphabetic chars");
         return;
       }
       var employee = {
-        name: this.name,
-        role: this.role,
+        name: name,
+        role: role,
         birthday: this.birthday,
         admissionDay: this.admissionDay,
       };

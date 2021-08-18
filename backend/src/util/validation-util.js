@@ -26,7 +26,7 @@ exports.parseId = function (id) {
 }
 
 exports.isValidText = function (text) {
-    return text.match("[A-z]{3,}") != null;
+    return text.match("^[A-z][A-z ]+[A-z]$")
 }
 
 exports.isValidDate = function (date) {
