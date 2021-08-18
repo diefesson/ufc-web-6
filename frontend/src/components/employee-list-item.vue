@@ -1,9 +1,9 @@
 <template>
-  <div class="car-list-item">
+  <div class="employee-list-item">
     <div>
-      <div>Marca: {{ car.brand }} Modelo: {{ car.name }}</div>
-      <div>Ano: {{ car.manufactureYear }} / {{ car.modelYear }}</div>
-      <div>Data da venda: {{ car.sellDate }}</div>
+      <div>Name: {{ employee.name }} Role: {{ employee.role }}</div>
+      <div>Birthday: {{ employee.birthday }}</div>
+      <div>Admission day: {{ employee.admissionDay }}</div>
     </div>
     <div>
       <button v-on:click="editClickHandler">edit</button>
@@ -14,21 +14,21 @@
 
 <script>
 export default {
-  name: "CarListItem",
-  props: ["car"],
+  name: "EmployeeListItem",
+  props: ["employee"],
   methods: {
     editClickHandler() {
-      this.$emit("edit-car", this.car);
+      this.$emit("edit-employee", this.employee);
     },
     removeClickhandler() {
-      this.$emit("remove-car", this.car.id);
+      this.$emit("remove-employee", this.employee.id);
     },
   },
 };
 </script>
 
 <style scoped>
-.car-list-item {
+.employee-list-item {
   padding: 5px;
   height: fit-content;
   width: 100%;
