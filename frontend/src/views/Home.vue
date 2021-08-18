@@ -2,75 +2,91 @@
   <div class="home">
     <div class="column">
       <div class="title">Add/edit</div>
-      <car-form
-        ref="carForm"
-        v-on:add-car="addCarHandler"
-        v-on:update-car="updateCarHandler"
+      <employee-form
+        ref="employeeForm"
+        v-on:add-employee="addEmployeeHandler"
+        v-on:update-employee="updateEmployeeHandler"
       />
-      <div class="title">Cars</div>
+      <div class="title">Employees</div>
       <div class="list-options">
         <label>Limit:</label>
         <input type="number" min="1" v-model="limit" />
-        <label>Brand:</label>
-        <input v-model="brand" />
+        <label>Role:</label>
+        <input v-model="role" />
       </div>
-      <car-list
-        v-bind:cars="cars"
-        v-on:edit-car="editCarHandler"
-        v-on:remove-car="removeCarHanlder"
+      <employee-list
+        v-bind:employees="employees"
+        v-on:edit-employee="editEmployeeHandler"
+        v-on:remove-employee="removeEmployeeHandler"
       />
     </div>
   </div>
 </template>
 
 <script>
-import CarForm from "../components/car-form.vue";
-import CarList from "../components/car-list.vue";
-import carService from "../service/car-service";
+import EmployeeForm from "../components/employee-form.vue";
+import EmployeeList from "../components/employee-list.vue";
+import employeeService from "../service/employee-service";
 
 export default {
   name: "Home",
   components: {
-    CarForm,
-    CarList,
+    EmployeeForm,
+    EmployeeList,
   },
   data: () => {
     return {
       limit: 5,
-      brand: "",
-      cars: [],
+      role: "",
+      employees: [],
     };
   },
   methods: {
-    async addCarHandler(car) {
-      await carService.add(car);
-      this.refreshCars();
+    async addEmployeeHandler(employee) {
+      let [, error] = await employeeService.add(employee);
+      if (error) {
+        return console.error("error adding employee", error);
+      }
+      this.refreshEmployees();
     },
-    async updateCarHandler(e) {
-      await carService.update(e.id, e.car);
-      this.refreshCars();
+    async updateEmployeeHandler(e) {
+      let [, error] = await employeeService.update(e.id, e.employee);
+      if (error) {
+        return console.error("error updating employee", error);
+      }
+      this.refreshEmployees();
     },
-    async editCarHandler(car) {
-      this.$refs.carForm.edit(car);
+    async editEmployeeHandler(employee) {
+      this.$refs.employeeForm.edit(employee);
     },
-    async removeCarHanlder(id) {
-      await carService.remove(id);
-      this.refreshCars();
+    async removeEmployeeHandler(id) {
+      let [, error] = await employeeService.remove(id);
+      if (error) {
+        return console.error("error removing employee", error);
+      }
+      this.refreshEmployees();
     },
-    async refreshCars() {
-      this.cars = await carService.getAll(this.limit, this.brand);
+    async refreshEmployees() {
+      let [employees, error] = await employeeService.findAll(
+        this.limit,
+        this.role
+      );
+      if (error) {
+        return console.error("error refreshing employees", error);
+      }
+      this.employees = employees;
     },
   },
   watch: {
     limit() {
-      this.refreshCars();
+      this.refreshEmployees();
     },
-    brand() {
-      this.refreshCars();
+    role() {
+      this.refreshEmployees();
     },
   },
   mounted() {
-    this.refreshCars();
+    this.refreshEmployees();
   },
 };
 </script>
@@ -98,7 +114,7 @@ export default {
   font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
-.list-options{
+.list-options {
   display: grid;
   grid-auto-flow: column;
   gap: 3px;

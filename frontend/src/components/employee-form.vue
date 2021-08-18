@@ -1,18 +1,16 @@
 <template>
-  <div class="car-form">
+  <div class="employee-form">
     <div class="entries">
       <label>ID:</label>
       <input v-model="id" readonly />
       <label>Name:</label>
       <input v-model="name" />
-      <label>Brand:</label>
-      <input v-model="brand" />
-      <label>Manufacture year:</label>
-      <input v-model="manufactureYear" type="number" />
-      <label>Model year:</label>
-      <input v-model="modelYear" type="number" />
-      <label>Sell date:</label>
-      <input v-model="sellDate" type="date" />
+      <label>Role:</label>
+      <input v-model="role" />
+      <label>Birthday:</label>
+      <input v-model="birthday" type="date" />
+      <label>Admission day:</label>
+      <input v-model="admissionDay" type="date" />
     </div>
 
     <div>
@@ -38,16 +36,15 @@ function todayUTC() {
 }
 
 export default {
-  name: "CarForm",
+  name: "EmployeeForm",
   data() {
     return {
       editing: false,
       id: "",
       name: "",
-      brand: "",
-      manufactureYear: new Date().getFullYear(),
-      modelYear: new Date().getFullYear(),
-      sellDate: todayUTC(),
+      role: "",
+      birthday: todayUTC(),
+      admissionDay: todayUTC(),
     };
   },
   methods: {
@@ -55,39 +52,41 @@ export default {
       this.editing = false;
       this.id = "";
       this.name = "";
-      this.brand = "";
-      this.manufactureYear = new Date().getFullYear();
-      this.modelYear = new Date().getFullYear();
-      this.sellDate = todayUTC();
+      this.role = "";
+      this.birthday = todayUTC();
+      this.admissionDay = todayUTC();
     },
-    edit(car) {
+    edit(employee) {
       this.editing = true;
-      this.id = car.id;
-      this.name = car.name;
-      this.brand = car.brand;
-      this.manufactureYear = car.manufactureYear;
-      this.modelYear = car.modelYear;
-      this.sellDate = car.sellDate;
+      this.id = employee.id;
+      this.name = employee.name;
+      this.role = employee.role;
+      this.birthday = employee.birthday;
+      this.admissionDay = employee.admissionDay;
     },
     save() {
-      if (this.name.length < 3 || this.brand.length < 3) {
-        alert("Name and brand should have at least 3 characters");
+      let textRegex = "[A-z]{3,}";
+      if (!this.name.match(textRegex)) {
+        alert("Name should be composed of at least 3 alphabetic chars");
         return;
       }
-      var car = {
+      if (!this.role.match(textRegex)) {
+        alert("Role should be composed of at least 3 alphabetic chars");
+        return;
+      }
+      var employee = {
         name: this.name,
-        brand: this.brand,
-        manufactureYear: this.manufactureYear,
-        modelYear: this.modelYear,
-        sellDate: this.sellDate,
+        role: this.role,
+        birthday: this.birthday,
+        admissionDay: this.admissionDay,
       };
       if (this.editing) {
-        this.$emit("update-car", {
+        this.$emit("update-employee", {
           id: this.id,
-          car: car,
+          employee: employee,
         });
       } else {
-        this.$emit("add-car", car);
+        this.$emit("add-employee", employee);
       }
     },
   },
@@ -95,7 +94,7 @@ export default {
 </script>
 
 <style scoped>
-.car-form {
+.employee-form {
   width: 400px;
   min-width: fit-content;
   padding: 5px;
@@ -127,6 +126,6 @@ label {
 }
 
 input:read-only {
-  background-color: #E5E5E5;
+  background-color: #e5e5e5;
 }
 </style>
